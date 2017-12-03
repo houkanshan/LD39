@@ -17,7 +17,8 @@ export default class Dialog {
     .then(() => this.isSaying = false)
   }
   stopSay() {
-    this.el.removeClass('say').text('...')
+    this.el.removeClass('say')
+    typer(this.el, '…')
     this.isSaying = false
   }
 }

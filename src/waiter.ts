@@ -7,29 +7,10 @@ import { getRandom } from './utils'
 
 const textRecommend = [
   'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
-  'Have you tried turning him off and on again?',
+  'It would make life easier if Woody Allen’s movies were as easy and as right to condemn as his behavior.'
 ]
 const textMisc = [
   'Dripping with snobbery, a voice message went viral and prompted a cascade of discussions about the sacred place of mate in Argentine society.',
-  'In which Republican donors pick your children’s pockets.',
-  'We used to blame both parties for our poisonous political environment. Not anymore.',
-  'Dripping with snobbery, a voice message went viral and prompted a cascade of discussions about the sacred place of mate in Argentine society.',
-  'Dripping with snobbery, a voice message went viral and prompted a cascade of discussions about the sacred place of mate in Argentine society.',
-  'Dripping with snobbery, a voice message went viral and prompted a cascade of discussions about the sacred place of mate in Argentine society.',
-  'In which Republican donors pick your children’s pockets.',
-  'We used to blame both parties for our poisonous political environment. Not anymore.',
-  'In which Republican donors pick your children’s pockets.',
-  'We used to blame both parties for our poisonous political environment. Not anymore.',
   'In which Republican donors pick your children’s pockets.',
   'We used to blame both parties for our poisonous political environment. Not anymore.',
 ]
@@ -53,10 +34,11 @@ export default class Waiter {
   }
 
   lastTexts: Array<string> = []
+  bufferLen = 1
 
   chooseFrom(array: Array<string>) {
     const text = getRandom(array, this.lastTexts)
-    this.lastTexts = [text, ...this.lastTexts.slice(9)]
+    this.lastTexts = [text, ...this.lastTexts.slice(this.bufferLen - 1)]
     return text
   }
 
