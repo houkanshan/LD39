@@ -19,3 +19,8 @@ export function delay(time) {
     return dfd.promise()
   }
 }
+
+export function getRandom<T>(arr: Array<T>, excludes : Array<T> = []) {
+  const filteredArr = arr.filter((item) => excludes.indexOf(item) === -1)
+  return filteredArr[Math.floor(Math.random() * filteredArr.length)]
+}

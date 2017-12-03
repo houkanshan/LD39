@@ -33,7 +33,10 @@ function startMainScene() {
 
   PubSub.subscribe('menu.dish.select', (t, dish) => {
     player.wantDish(dish)
-    .then(() => friend.dialog.stopSay())
+    .then(() => {
+      friend.dialog.stopSay()
+      waiter.dialog.stopSay()
+    })
     .then(delay(1000))
     .then(() => friend.check(dish))
     .then((accept) => {
@@ -49,6 +52,17 @@ function startMainScene() {
     .then(delay(1000))
     .then(() => waiter.explainDish(dish))
   })
+
+  setTimeout(function waiterNag() {
+    if (
+      !friend.dialog.isSaying &&
+      !player.dialog.isSaying &&
+      !waiter.dialog.isSaying
+    ) {
+      waiter.nag()
+    }
+    setTimeout(waiterNag, 5000 + Math.random() * 5000)
+  }, 2000)
 }
 
 if (document.readyState === 'complete') {

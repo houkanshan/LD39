@@ -5,18 +5,19 @@ import typer from './typer'
 export default class Dialog {
   el: JQuery
   dfd: JQuery.Deferred<any, any, any>
+  isSaying = false
   constructor(el:JQuery) {
     this.el = el
   }
   say(text: string) {
     this.el.addClass('say')
-    this.dfd = $.Deferred()
+    this.isSaying = true
     return typer(this.el, text)
     .then(delay(500))
+    .then(() => this.isSaying = false)
   }
   stopSay() {
-    if (!this.dfd) { return }
     this.el.removeClass('say').text('...')
-    this.dfd.reject()
+    this.isSaying = false
   }
 }
