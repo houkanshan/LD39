@@ -9,3 +9,13 @@ export function change<T>(array: Array<T>, index: number, newItem: T): Array<T> 
     ...array.slice(index + 1)
   ]
 }
+
+export function delay(time) {
+  return function(data?:any): Promise<any> {
+    const dfd = $.Deferred()
+    setTimeout(function () {
+      dfd.resolve(data)
+    }, time)
+    return dfd.promise()
+  }
+}

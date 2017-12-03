@@ -31,6 +31,7 @@ export default class Menu {
     this.addPage(this.dishes)
 
     this.el.on('click', '.dish-title', this.clickDish.bind(this))
+    this.el.on('click', '.dish-help', this.clickDishHelp.bind(this))
   }
   addPage(dishes) {
     const page = $('<div>')
@@ -39,7 +40,7 @@ export default class Menu {
         template(`
           <div class="dish-item" data-id="{{=it.id}}">
             <span class="dish-title">{{=it.name}}</span>
-            <span class="dish-help"></span>
+            <span class="dish-help">?</span>
           </div>
         `)(dish)
       )
