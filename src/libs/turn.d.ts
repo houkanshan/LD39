@@ -1,5 +1,5 @@
 interface JQuery {
-  turn(options?: any) : any
+  turn(...options: any[]) : any
 }
 interface Window {
   $: any,
