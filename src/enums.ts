@@ -1,12 +1,16 @@
 export enum SayingType {
   Silence = 0,
 
-  Explaining, // waiter
+  // waiter
+  Explaining,
+  Recommending,
 
-  Judging, // friend
+  // friend
+  Judging,
 
-  Asking, // player
-  Consulting, // player
+  // player
+  Asking,
+  Consulting,
 
   Misc,
 }

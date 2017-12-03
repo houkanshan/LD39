@@ -17,14 +17,13 @@ export default class Waiter {
   askDish(dish: Dish) {
     this.sayingType = SayingType.Asking
     PubSub.publish('player.ask', dish)
-    this.dialog.say(`What is ${dish.name}?`)
+    return this.dialog.say(`What is ${dish.name}?`)
     .then(() => this.sayingType = SayingType.Silence)
   }
 
   wantDish(dish: Dish) {
     this.sayingType = SayingType.Consulting
     PubSub.publish('player.consult', dish)
-    this.dialog.say(`How about ${dish.name}?`)
-    .then(() => this.sayingType = SayingType.Silence)
+    return this.dialog.say(`How about ${dish.name}?`)
   }
 }

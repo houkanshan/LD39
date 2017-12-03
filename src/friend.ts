@@ -8,6 +8,7 @@ export default class Friend {
   el: JQuery
   dialog: Dialog
   sayingType: SayingType
+  taste: Taste
   constructor() {
     this.el = $('#friend')
     this.dialog = new Dialog(this.el.find('.dialog'))
@@ -15,11 +16,10 @@ export default class Friend {
   }
 
   check(dish) {
-    const isOk = true
+    const isOk = Math.random() > 0.5
     this.sayingType = SayingType.Judging
     PubSub.publish('friend.judge', { dish, isOk })
-    this.dialog.say('Fine.')
-    .then(() => this.sayingType = SayingType.Silence)
-    return isOk
+    return this.dialog.say(isOk ? 'Fine.' : 'No.')
+    .then(() => isOk)
   }
 }

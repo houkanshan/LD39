@@ -33,18 +33,20 @@ function startMainScene() {
 
   PubSub.subscribe('menu.dish.select', (t, dish) => {
     player.wantDish(dish)
-    delay(1000)()
-    .then(() => friend.check(dish))
+    .then(() => friend.dialog.stopSay())
     .then(delay(1000))
+    .then(() => friend.check(dish))
     .then((accept) => {
       if (accept) {
         order.addOrder(dish)
+      } else {
+        waiter.recommend()
       }
     })
   })
   PubSub.subscribe('menu.dish.help', (t, dish) => {
     player.askDish(dish)
-    delay(1000)()
+    .then(delay(1000))
     .then(() => waiter.explainDish(dish))
   })
 }

@@ -7,11 +7,26 @@ export default class Menu {
   book: JQuery
   dishes: Array<Dish>
   constructor() {
-    this.el = $("#menubook")
+    this.el = $("#menu")
     this.book = this.el.turn({
       width: 640,
       height: 480,
+      when: {
+        start: (e, pageObject) => {
+          if (pageObject.next + 4 > this.book.turn('pages')) {
+            this.addPage(this.generateDishes())
+          }
+        },
+        // end: (e, pageObject, turned) => {
+          // this.book.turn('disable', false)
+          // if (!turned) { return }
+          // if (pageObject.next + 4 > this.book.turn('pages')) {
+          //   this.addPage(this.generateDishes())
+          // }
+        // },
+      }
     })
+    // TODO
     this.dishes = [
       {
         name: 'chicken 1',
@@ -22,18 +37,38 @@ export default class Menu {
         name: 'chicken 2',
         description: 'Prepare sour cream into egg coloring; drain first pans in a large bowl.',
         price: 200,
+      },
+      {
+        name: 'chicken 3',
+        description: 'Prepare sour cream into egg coloring; drain first pans in a large bowl.',
+        price: 200,
+      },
+      {
+        name: 'chicken 4',
+        description: 'Prepare sour cream into egg coloring; drain first pans in a large bowl.',
+        price: 200,
       }
     ]
     this.dishes.forEach((dish, i) => dish.id = i)
-    this.addPage(this.dishes)
-    this.addPage(this.dishes)
+
+    // TODO
     this.addPage(this.dishes)
     this.addPage(this.dishes)
 
     this.el.on('click', '.dish-title', this.clickDish.bind(this))
     this.el.on('click', '.dish-help', this.clickDishHelp.bind(this))
   }
+  generateDishes(taste?: Taste) {
+    // TODO
+    return this.dishes.slice()
+  }
   addPage(dishes) {
+    const frontFaceDishes = dishes.slice(0, dishes.length / 2)
+    const backFaceDishes = dishes.slice(dishes.length / 2)
+    this.addPageFace(frontFaceDishes)
+    this.addPageFace(backFaceDishes)
+  }
+  addPageFace(dishes) {
     const page = $('<div>')
     dishes.forEach(dish => {
       page.append(

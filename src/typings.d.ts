@@ -10,3 +10,9 @@ interface OrderItem {
   dish: Dish,
   deleted?: boolean,
 }
+
+interface Taste {
+  a: number,
+  b: number,
+  c: number,
+}

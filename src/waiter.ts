@@ -17,7 +17,12 @@ export default class Waiter {
   explainDish(dish: Dish) {
     this.sayingType = SayingType.Explaining
     PubSub.publish('player.ask', dish)
-    this.dialog.say(dish.description)
-    .then(() => this.sayingType = SayingType.Silence)
+    return this.dialog.say(dish.description)
+  }
+
+  recommend() {
+    this.sayingType = SayingType.Recommending
+    PubSub.publish('waiter.recommend')
+    return this.dialog.say(`Tonight is good!`)
   }
 }
