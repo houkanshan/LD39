@@ -60,47 +60,64 @@ function parseAllData() {
 
 let count = 0
 
-function getDishesWords(words, nextWordsGroup) {
+function compileDish(words) {
+  return words.map(w => w.name).join(' ')
+}
+
+function getDishes(words, nextWordsGroup) {
   if (!nextWordsGroup.length) {
     count += 1
-    return [words]
+    return [compileDish(words)]
   }
   let nextWords = nextWordsGroup[0]
   if (nextWords.length === 0) { nextWords = [''] }
   const newNextWordsGroup = nextWordsGroup.slice(1)
   let i, ilen = nextWords.length
-  let dishesWords = []
+  let dishesNames = []
 
   for (i = 0; i < ilen; i++) {
-    dishesWords = dishesWords.concat(getDishesWords(
+    dishesNames = dishesNames.concat(getDishes(
       words.concat([nextWords[i]]),
       newNextWordsGroup
     ))
   }
-  return dishesWords
+  return dishesNames
 }
 
 function generateAllDishes() {
   const allData = parseAllData()
   return allData.map((course) => {
+    const levels = [1,2,3,4].map((level) => {
+      const dishesWords = []
+      const slotGroups = course.slotGroups
+      const levelAvailableWords = slotGroups.map((slotGroup) => {
+        let slotAvailableWords = []
+        slotGroup.forEach((levelSlot) => {
+          if (
+            typeof levelSlot.requirement !== 'number' ||
+            levelSlot.requirement <= level
+          ) {
+            slotAvailableWords = slotAvailableWords.concat(levelSlot.words)
+          }
+        })
+        return slotAvailableWords
+      })
+      const levelPoolLength = levelAvailableWords.reduce((acc, item) =>
+        item.length ? acc * item.length : acc, 1
+      )
+      let levelPool = null
+      if (levelPoolLength < 1000) {
+        levelPool = getDishes([], levelAvailableWords)
+      }
+      return {
+        levelPool,
+        levelPoolLength,
+        levelAvailableWords,
+      }
+    })
     return {
       ...course,
-      levels: [1,2,3,4].map((level) => {
-        const dishesWords = []
-        const slotGroups = course.slotGroups
-        return slotGroups.map((slotGroup) => {
-          let availableWords = []
-          slotGroup.forEach((levelSlot) => {
-            if (
-              typeof levelSlot.requirement !== 'number' ||
-              levelSlot.requirement <= level
-            ) {
-              availableWords = availableWords.concat(levelSlot.words)
-            }
-          })
-          return availableWords
-        })
-      })
+      levels,
     }
   })
 }
