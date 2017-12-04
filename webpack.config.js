@@ -68,6 +68,15 @@ const config = {
             options: 'jQuery'
           }
         ]
+      },
+      {
+        test: /\.csv$/,
+        loader: 'csv-loader',
+        options: {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true
+        }
       }
     ]
   },
@@ -78,12 +87,6 @@ const config = {
 
 if (isProduction) {
   config.devtool = false
-  config.plugins = [
-    ...config.plugins,
-    new ExtractTextPlugin('dist/index.css'),
-  ]
-} else {
-
 }
 
 module.exports = config
