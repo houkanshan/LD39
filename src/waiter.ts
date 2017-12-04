@@ -38,7 +38,7 @@ export default class Waiter {
 
   chooseFrom(array: Array<string>) {
     const text = getRandom(array, this.lastTexts)
-    this.lastTexts = [text, ...this.lastTexts.slice(this.bufferLen - 1)]
+    this.lastTexts = [text, ...this.lastTexts.slice(0, this.bufferLen - 1)]
     return text
   }
 
