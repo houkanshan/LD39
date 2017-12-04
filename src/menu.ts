@@ -1,6 +1,7 @@
 import PubSub from 'pubsub-js'
 import * as $ from 'jquery'
 import { template } from 'dot'
+import './menuText'
 
 export default class Menu {
   el: JQuery
@@ -17,13 +18,6 @@ export default class Menu {
             this.addPage(this.generateDishes())
           }
         },
-        // end: (e, pageObject, turned) => {
-          // this.book.turn('disable', false)
-          // if (!turned) { return }
-          // if (pageObject.next + 4 > this.book.turn('pages')) {
-          //   this.addPage(this.generateDishes())
-          // }
-        // },
       }
     })
     // TODO
@@ -51,7 +45,6 @@ export default class Menu {
     ]
     this.dishes.forEach((dish, i) => dish.id = i)
 
-    // TODO
     this.addPage(this.dishes)
     this.addPage(this.dishes)
 

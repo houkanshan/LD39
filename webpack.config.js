@@ -29,7 +29,7 @@ const config = {
   },
   resolve: {
     // Add '.ts' and '.tsx' as a resolvable extension.
-    extensions: ['.ts', '.tsx', '.js', '.styl']
+    extensions: ['.ts', '.tsx', '.js', '.styl', '.csv']
   },
   module: {
     rules: [
@@ -74,8 +74,8 @@ const config = {
         loader: 'csv-loader',
         options: {
           dynamicTyping: true,
-          header: true,
-          skipEmptyLines: true
+          header: false,
+          skipEmptyLines: false
         }
       }
     ]
