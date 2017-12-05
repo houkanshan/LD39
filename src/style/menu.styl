@@ -1,15 +1,39 @@
 @require 'variables'
 
+$menuHeight = 480px
+$menuWidth = 320px
+
 .menu-wrapper
   position: absolute
   left: 300px
   bottom: 50px
   z-index: $zIndexMenu
-  width: 640px
-  height 480px
+  width: ($menuWidth*2)
+  height $menuHeight
 
 #menu
+  .page-wrapper
+    perspective: 5000px
   .page
     background: white
+  div[page="1"] > div
+  div[page="2"] > div
+	  overflow:visible !important
   .dish-help
     cursor: pointer
+  .side
+    width: 5px
+    height: $menuHeight
+    position: absolute
+    top:0
+    left: ($menuWidth - @width)
+    // background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #bbb), color-stop(0.5,  #ddd), color-stop(1,  #bbb));
+    // background-image:-webkit-linear-gradient(left, #bbb, #ddd, #bbb);
+    // background-image:-moz-linear-gradient(left, #bbb, #ddd, #bbb);
+    // background-image:-ms-linear-gradient(left, #bbb, #ddd, #bbb);
+    // background-image:-o-linear-gradient(left, #bbb, #ddd, #bbb);
+    // background-image: linear-gradient(left, #bbb, #ddd, #bbb)
+    background: black
+    transform: rotateY(-90deg)
+    transform-origin: top right
+    z-index: 100000
