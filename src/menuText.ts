@@ -61,7 +61,15 @@ function parseAllData() {
 let count = 0
 
 function compileDish(words) {
-  return words.map(w => w.name).join(' ')
+  const name = words.map(w => w.name).join(' ')
+  return {
+    ...words.reduce((acc, i) => ({
+      price: acc.price + i.price ,
+      pungency: acc.pungency + i.pungency,
+    }), {price: 0, pungency: 0}),
+    // TODO
+    name,
+  }
 }
 
 function getDishes(words, nextWordsGroup) {
@@ -122,4 +130,50 @@ function generateAllDishes() {
   })
 }
 
-console.log(generateAllDishes())
+const allDishes = generateAllDishes()
+
+console.log(allDishes)
+
+function getRandomSubArray(array, count) {
+  // Make a copy of the array
+  var tmp = array.slice()
+  var ret = []
+
+  for (var i = 0; i < count; i++) {
+    var index = Math.floor(Math.random() * tmp.length)
+    var removed = tmp.splice(index, 1)
+    ret.push(removed[0])
+  }
+  return ret
+}
+function getRandom(array) {
+  return array[Math.floor(Math.random() * array.length)]
+}
+
+function selectDishes(course, level, count) {
+  const levelData = course.levels[level]
+  if (levelData.pool && false) {
+    // return getRandomSubArray(levelData.pool, count)
+  } else {
+    let i = 0
+    const dishes = []
+    while(i++ < count) {
+      dishes.push(
+        compileDish(
+          levelData.levelAvailableWords
+            .filter(ws => ws.length)
+            .map(ws => getRandom(ws))
+        )
+      )
+    }
+    return dishes
+  }
+}
+
+function batchSelectDishes(indexes, level, countPerIndex) {
+  return indexes.map((index) => {
+    return selectDishes(allDishes[index], level, countPerIndex)
+  })
+}
+
+console.log(batchSelectDishes([0, 1, 2], 1, 2))
