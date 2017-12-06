@@ -1,12 +1,14 @@
 import PubSub from 'pubsub-js'
 import * as $ from 'jquery'
 import { template } from 'dot'
-import './menuText'
+import {selectDishesInBatches, MAIN_DISH_INDEX} from './menuText'
+import {shuffle} from './utils'
 
 export default class Menu {
   el: JQuery
   book: JQuery
-  dishes: Array<Dish>
+  dishes: Array<Dish> = []
+  level = 1
   constructor() {
     this.el = $("#menu")
     this.book = this.el.turn({
@@ -15,60 +17,57 @@ export default class Menu {
       when: {
         start: (e, pageObject) => {
           if (pageObject.next + 4 > this.book.turn('pages')) {
-            this.addPage(this.generateDishes())
+            this.addPagesGroup()
           }
         },
       }
     })
-    // TODO
-    this.dishes = [
-      {
-        name: 'chicken 1',
-        description: 'The recipe from an oiled by fried and can.',
-        price: 100,
-      },
-      {
-        name: 'chicken 2',
-        description: 'Prepare sour cream into egg coloring; drain first pans in a large bowl.',
-        price: 200,
-      },
-      {
-        name: 'chicken 3',
-        description: 'Prepare sour cream into egg coloring; drain first pans in a large bowl.',
-        price: 200,
-      },
-      {
-        name: 'chicken 4',
-        description: 'Prepare sour cream into egg coloring; drain first pans in a large bowl.',
-        price: 200,
-      }
-    ]
-    this.dishes.forEach((dish, i) => dish.id = i)
-
-    this.addPage(this.dishes)
-    this.addPage(this.dishes)
+    this.addPagesGroup()
 
     this.el.on('click', '.dish-title', this.clickDish.bind(this))
     this.el.on('click', '.dish-help', this.clickDishHelp.bind(this))
   }
-  generateDishes(taste?: Taste) {
-    // TODO
-    return this.dishes.slice()
+  addPagesGroup() {
+    this.generateDishes().forEach(course => {
+      this.addPage(course)
+    })
   }
-  addPage(dishes) {
-    const frontFaceDishes = dishes.slice(0, dishes.length / 2)
-    const backFaceDishes = dishes.slice(dishes.length / 2)
-    this.addPageFace(frontFaceDishes)
-    this.addPageFace(backFaceDishes)
+  defaultCourseIndexes = [0, 1, 2, 3, 4, 6]
+  generateDishes() {
+    let indexes = this.defaultCourseIndexes.slice()
+    if (this.dishes.length) {
+      indexes = shuffle(indexes)
+    }
+    // insert 2 more main dishes
+    indexes.splice(indexes.indexOf(MAIN_DISH_INDEX), 0, MAIN_DISH_INDEX, MAIN_DISH_INDEX)
+    console.log(indexes)
+    const courses = selectDishesInBatches(indexes, this.level, 8, 3)
+    courses[indexes.indexOf(MAIN_DISH_INDEX) + 1].noTitle = true
+    courses[indexes.indexOf(MAIN_DISH_INDEX) + 2].noTitle = true
+
+    const lastId = this.dishes.length
+    let newDishes = []
+    courses.forEach(course => {
+      newDishes = newDishes.concat(course.dishes)
+    })
+    newDishes.forEach((dish, i) => dish.id = i + lastId)
+    this.dishes = this.dishes.concat(newDishes)
+    return courses
   }
-  addPageFace(dishes) {
-    const page = $('<div>')
+  addPage({ name, dishes, noTitle }) {
+    const page = $('<div>').addClass('name')
+    if (noTitle) { page.addClass('no-title') }
     dishes.forEach(dish => {
       page.append(
         template(`
           <div class="dish-item" data-id="{{=it.id}}">
             <span class="dish-title">{{=it.name}}</span>
-            <span class="dish-help">?</span>
+            <span class="dish-pungency">
+              {{ for(var i = 0; i < it.pungency; i ++) { }}
+              ★
+              {{ } }}
+            </span>
+            <span class="dish-price">\${{=it.price}}</span>
           </div>
         `)(dish)
       )

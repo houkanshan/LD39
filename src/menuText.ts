@@ -1,14 +1,16 @@
 declare function require(name:string)
 
-const d1 = require('./data/Salads.csv')
-const d2 = require('./data/BurgersSandwiches.csv')
-const d3 = require('./data/PastaNoodles.csv')
-const d4 = require('./data/MainDishesEntees.csv')
-const d5 = require('./data/Pizzas.csv')
-const d6 = require('./data/SoupStew.csv')
-const d7 = require('./data/Desserts.csv')
+const d0 = require('./data/Salads.csv')
+const d1 = require('./data/BurgersSandwiches.csv')
+const d2 = require('./data/PastaNoodles.csv')
+const d3 = require('./data/MainDishesEntees.csv')
+const d4 = require('./data/Pizzas.csv')
+const d5 = require('./data/SoupStew.csv')
+const d6 = require('./data/Desserts.csv')
 
-const csvData = [d1, d2, d3, d4, d5, d6, d7]
+const csvData = [d0, d1, d2, d3, d4, d5, d6]
+
+export const MAIN_DISH_INDEX = 3
 
 function parseData(data) {
   const name = data[0][0]
@@ -21,15 +23,17 @@ function parseData(data) {
     const baseRow = table[i]
     const priceRow = table[i+1]
     const pungencyRow = table[i+2]
+    const requirement = baseRow[1]
     typeGroups.push({
       isSlotLeader: baseRow[0] === '*',
-      requirement: baseRow[1],
+      requirement,
       words: baseRow.slice(2)
         .filter(w => !!w.trim()).map((word, j) => {
           return {
             name: word.trim(),
             price: priceRow[j + 2] || 0,
             pungency: pungencyRow[j + 2] || 0,
+            requirement,
           }
       })
     })
@@ -60,25 +64,45 @@ function parseAllData() {
 
 let count = 0
 
-function compileDish(words) {
-  const name = words.map(w => w.name).join(' ')
+function hasWord(word) {
+  return !!(word && word.name && word.name !== 'N/A')
+}
+
+function compileDish(words, course) {
+  let prevWord = ''
+  const filteredWords = words.filter((w, i) => {
+    const _prevWord = prevWord
+    const _nextWord = words[i + 1]
+    prevWord = w
+    if (!hasWord(w)) { return false }
+
+    if (w.requirement === 'both') {
+      return hasWord(_prevWord) && hasWord(_nextWord)
+    }
+    if (w.requirement === 'next') {
+      return hasWord(_nextWord)
+    }
+    if (w.requirement === 'prev') {
+      return hasWord(_prevWord)
+    }
+    return true
+  })
   return {
-    ...words.reduce((acc, i) => ({
+    ...filteredWords.reduce((acc, i) => ({
       price: acc.price + i.price ,
       pungency: acc.pungency + i.pungency,
-    }), {price: 0, pungency: 0}),
-    // TODO
-    name,
+      name: acc.name ? `${acc.name} ${i.name}` : i.name
+    }), {price: course.basePrice, pungency: 0, name: ''}),
   }
 }
 
-function getDishes(words, nextWordsGroup) {
+function getDishes(words, nextWordsGroup, course) {
   if (!nextWordsGroup.length) {
     count += 1
-    return [compileDish(words)]
+    return [compileDish(words, course)]
   }
   let nextWords = nextWordsGroup[0]
-  if (nextWords.length === 0) { nextWords = [''] }
+  if (nextWords.length === 0) { nextWords = [null] }
   const newNextWordsGroup = nextWordsGroup.slice(1)
   let i, ilen = nextWords.length
   let dishesNames = []
@@ -86,7 +110,8 @@ function getDishes(words, nextWordsGroup) {
   for (i = 0; i < ilen; i++) {
     dishesNames = dishesNames.concat(getDishes(
       words.concat([nextWords[i]]),
-      newNextWordsGroup
+      newNextWordsGroup,
+      course
     ))
   }
   return dishesNames
@@ -115,7 +140,7 @@ function generateAllDishes() {
       )
       let levelPool = null
       if (levelPoolLength < 1000) {
-        levelPool = getDishes([], levelAvailableWords)
+        levelPool = getDishes([], levelAvailableWords, course)
       }
       return {
         levelPool,
@@ -132,7 +157,7 @@ function generateAllDishes() {
 
 const allDishes = generateAllDishes()
 
-console.log(allDishes)
+// console.log(allDishes)
 
 function getRandomSubArray(array, count) {
   // Make a copy of the array
@@ -151,29 +176,36 @@ function getRandom(array) {
 }
 
 function selectDishes(course, level, count) {
-  const levelData = course.levels[level]
-  if (levelData.pool && false) {
-    // return getRandomSubArray(levelData.pool, count)
+  const levelData = course.levels[level - 1]
+  let dishes
+  if (levelData.levelPool) {
+    dishes = getRandomSubArray(levelData.levelPool, count)
   } else {
     let i = 0
-    const dishes = []
+    dishes = []
     while(i++ < count) {
       dishes.push(
         compileDish(
           levelData.levelAvailableWords
-            .filter(ws => ws.length)
-            .map(ws => getRandom(ws))
+            .map(ws => getRandom(ws)),
+          course
         )
       )
     }
-    return dishes
+  }
+  return {
+    name: course.name,
+    dishes,
   }
 }
-
-function batchSelectDishes(indexes, level, countPerIndex) {
+console.log(allDishes)
+export function selectDishesInBatches(indexes, level, countPerIndex, countLoss = 0) {
   return indexes.map((index) => {
-    return selectDishes(allDishes[index], level, countPerIndex)
+    return selectDishes(
+      allDishes[index], level,
+      countPerIndex - Math.round(countLoss * Math.random())
+    )
   })
 }
 
-console.log(batchSelectDishes([0, 1, 2], 1, 2))
+console.log(selectDishesInBatches([0, 1, 2], 1, 7))
