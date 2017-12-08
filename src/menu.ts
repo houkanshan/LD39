@@ -65,18 +65,22 @@ export default class Menu {
       dishesContent.append(
         template(`
           <div class="dish-item" data-id="{{=it.id}}">
-            <span class="dish-title">{{=it.name}}</span>
-            <span class="dish-pungency">
-              {{ for(var i = 0; i < it.pungency; i ++) { }}
-              <i/>
-              {{ } }}
+            <span class="dish-title">
+              <span class="text">{{=it.name}}</span>
+              <span class="dish-pungency">
+                {{ for(var i = 0; i < it.pungency; i ++) { }}
+                <i/>
+                {{ } }}
+              </span>
             </span>
             <span class="dish-price">\${{=it.price}}</span>
           </div>
         `)(dish)
       )
     })
-    this.book.turn('addPage', page, this.book.turn('pages') + 1)
+    const pageNum = this.book.turn('pages') + 1
+    page.append($('<span>', { 'class': 'page-num' }).text(`- ${pageNum} -`))
+    this.book.turn('addPage', page, pageNum)
   }
 
   clickDish(e) {

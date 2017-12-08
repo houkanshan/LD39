@@ -10,6 +10,7 @@ $menuWidth = 320px
   z-index: $zIndexMenu
   width: ($menuWidth*2)
   height $menuHeight
+  box-shadow: 9px 0 10px -3px #222
 
 #menu
   .page
@@ -42,6 +43,9 @@ $menuWidth = 320px
     transform-origin: top right
     z-index: 100000
 
+  .no-title
+    h3
+      color: transparent
   h3
     font: 16px/1 'chromoxome'
     color: #C63501
@@ -55,14 +59,18 @@ $menuWidth = 320px
     left: 37px
     right: 37px
   .dish-item
-    padding-bottom: 2px
     border-bottom: 1px solid #60564D
-    margin-bottom: 25px
-    height: 12px
+    height: 39px
     line-height: 12px
+    position: relative
+  .dish-price
+  .dish-title
+    position: absolute
+    bottom: 2px
   .dish-title
     color: #6F380E
     vertical-align: bottom
+    width: 212px
   .dish-pungency
     margin-left: 6px
     i
@@ -74,4 +82,13 @@ $menuWidth = 320px
       vertical-align: bottom
   .dish-price
     color: #CB4501
-    float: right
+    right: 0
+  .page-num
+    position: absolute
+    bottom: 10px
+    left: 0
+    right: 0
+    text-align: center
+    color: #4E4438
+    font: 12px/1 'chromoxome'
+    transform: scale(0.8)
