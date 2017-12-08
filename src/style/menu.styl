@@ -5,17 +5,27 @@ $menuWidth = 320px
 
 .menu-wrapper
   position: absolute
-  left: 300px
-  bottom: 50px
+  left: 282px
+  top: 159px
   z-index: $zIndexMenu
   width: ($menuWidth*2)
   height $menuHeight
 
 #menu
+  .page
+    background: url(../img/page.png) top left \/ $menuWidth $menuHeight
+  .front-cover
+    background: url(../img/front-cover.png) top left \/ $menuWidth $menuHeight
+  .front-cover-inside
+    background: url(../img/front-cover-inside.png) top left \/ $menuWidth $menuHeight
+  .title-page
+    background: url(../img/title-page.png) top left \/ $menuWidth $menuHeight
+  .back-cover
+    background: url(../img/back-cover.png) top left \/ $menuWidth $menuHeight
+  .back-cover
+    background: url(../img/back-cover-inside.png) top left \/ $menuWidth $menuHeight
   .page-wrapper
     perspective: 5000px
-  .page
-    background: white
   div[page="1"] > div
   div[page="2"] > div
 	  overflow:visible !important
@@ -27,13 +37,41 @@ $menuWidth = 320px
     position: absolute
     top:0
     left: ($menuWidth - @width)
-    // background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #bbb), color-stop(0.5,  #ddd), color-stop(1,  #bbb));
-    // background-image:-webkit-linear-gradient(left, #bbb, #ddd, #bbb);
-    // background-image:-moz-linear-gradient(left, #bbb, #ddd, #bbb);
-    // background-image:-ms-linear-gradient(left, #bbb, #ddd, #bbb);
-    // background-image:-o-linear-gradient(left, #bbb, #ddd, #bbb);
-    // background-image: linear-gradient(left, #bbb, #ddd, #bbb)
-    background: black
+    background: #3B342C
     transform: rotateY(-90deg)
     transform-origin: top right
     z-index: 100000
+
+  h3
+    font: 16px/1 'chromoxome'
+    color: #C63501
+    text-align: center
+    margin-top: 40px
+  .dishes-content
+    position: absolute
+    top: 50%
+    margin-top: 30px
+    transform: translateY(-50%)
+    left: 37px
+    right: 37px
+  .dish-item
+    padding-bottom: 2px
+    border-bottom: 1px solid #60564D
+    margin-bottom: 25px
+    height: 12px
+    line-height: 12px
+  .dish-title
+    color: #6F380E
+    vertical-align: bottom
+  .dish-pungency
+    margin-left: 6px
+    i
+      width: 10px
+      height: 12px
+      display: inline-block
+      background: url(../img/spiciness.png) left top \/ 10px 11.5px no-repeat
+      margin-right: 1px
+      vertical-align: bottom
+  .dish-price
+    color: #CB4501
+    float: right

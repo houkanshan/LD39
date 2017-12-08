@@ -6,7 +6,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const stylusLoaders = [
   {
     loader: 'css-loader',
-    options: { sourceMap: !isProduction }
+    options: {
+      sourceMap: !isProduction,
+      url: false
+    }
   },
   {
     loader: 'postcss-loader',

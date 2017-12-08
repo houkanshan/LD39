@@ -55,16 +55,20 @@ export default class Menu {
     return courses
   }
   addPage({ name, dishes, noTitle }) {
-    const page = $('<div>').addClass('name')
+    const page = $('<div>')
     if (noTitle) { page.addClass('no-title') }
+    page.append($('<h3>').text(`- ${name} -`))
+    const dishesContent = $('<div>').addClass('dishes-content')
+    page.append(dishesContent)
+
     dishes.forEach(dish => {
-      page.append(
+      dishesContent.append(
         template(`
           <div class="dish-item" data-id="{{=it.id}}">
             <span class="dish-title">{{=it.name}}</span>
             <span class="dish-pungency">
               {{ for(var i = 0; i < it.pungency; i ++) { }}
-              ★
+              <i/>
               {{ } }}
             </span>
             <span class="dish-price">\${{=it.price}}</span>
