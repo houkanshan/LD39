@@ -25,8 +25,11 @@ function startGame() {
 function startMainScene() {
   PubSub.subscribe('menu', (t, d) => console.log(t, d))
   PubSub.subscribe('order', (t, d) => console.log(t, d))
+
+  const beginTime = new Date()
+
   const menu = new Menu()
-  const order = new Order()
+  const order = new Order({ beginTime })
   const player = new Player()
   const friend = new Friend()
   const waiter = new Waiter()

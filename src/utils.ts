@@ -43,3 +43,33 @@ export function shuffle(array) {
 
   return array;
 }
+
+export function getMonthWord(monthIndex) {
+  return [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ][monthIndex]
+}
+
+export function leftPad2(i: any): string {
+  const pad = '00'
+  return pad.substring(0, pad.length - i.toString().length) + i
+}
+
+export function getTime(time: Date): string {
+  return `${leftPad2(time.getHours())}:${leftPad2(time.getMinutes())}`
+}
+
+export function randomDigital(bit) {
+  return Math.random().toFixed(bit).slice(2)
+}

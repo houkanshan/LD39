@@ -24,8 +24,8 @@ export default class Menu {
     })
     this.addPagesGroup()
 
-    this.el.on('click', '.dish-title', this.clickDish.bind(this))
-    this.el.on('click', '.dish-help', this.clickDishHelp.bind(this))
+    this.el.on('click', '.dish-item', this.clickDish.bind(this))
+    // this.el.on('click', '.dish-help', this.clickDishHelp.bind(this))
   }
   addPagesGroup() {
     this.generateDishes().forEach(course => {

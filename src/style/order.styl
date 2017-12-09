@@ -1,10 +1,38 @@
 #order
   position: absolute
-  left: 0
-  top: 20px
-  background: #fff
-  .order-item
-    &.is-deleted
-      background: black
-      .btn-delete
-        display: none
+  left: 9px
+  top: 0
+  width: 220px*2
+  height: 257px*2
+  background: url(../img/note.png) left top \/ @width @height
+  font: 12px/1 Monaco
+  transform-origin: left top
+  transform: scale(0.5)
+  > .hd
+    padding-top: 56px
+  .line
+    padding: 0 14px
+    margin-bottom: 3px
+    white-space: nowrap
+    color: #59595A
+    font-weight: bold
+  .time
+    display: inline-block
+    width: 283px
+  .table-number
+    display: inline-block
+    width: 134px
+  .guest-count
+    display: inline-block
+    width: 128px
+
+  > .list
+    font: 24px/1.2 'seoge'
+    color: #5D5D5D
+    position: absolute
+    left: 33px
+    right: 20px
+    top: 110px
+    bottom: 0
+    > .order-item
+      margin-bottom: 28px
