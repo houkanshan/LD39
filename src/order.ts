@@ -2,6 +2,7 @@ import PubSub from 'pubsub-js'
 import * as $ from 'jquery'
 import { template } from 'dot'
 import { append, change, getMonthWord, getTime, randomDigital } from './utils'
+import typer from './typer'
 
 export default class Order {
   el: JQuery
@@ -27,20 +28,24 @@ export default class Order {
     this.elList.on('click', '.btn-delete', this.deleteOrder.bind(this))
   }
   renderItem(order) {
-    return  template(`
+    return template(`
       <div
         class="order-item {{=it.deleted ? 'is-deleted' : ''}}"
         data-id="{{=it.id}}"
       >
-        <span class="order-title">{{=it.dish.name}}</span>
+        <span class="order-title"></span>
       </div>
     `)(order)
   }
   addOrder(dish) {
     const order = { dish, id: this.orderItems.length }
     this.orderItems = append(this.orderItems, order)
-    this.elList.append(this.renderItem(order))
-    PubSub.publish('order.added', order)
+    const newOrderEl = $(this.renderItem(order))
+    this.elList.append(newOrderEl)
+    typer(newOrderEl.find('.order-title'), dish.name)
+      .then(() => {
+        PubSub.publish('order.added', order)
+      })
   }
   deleteOrder(e) {
     const target = $(e.target).closest('.order-item')
