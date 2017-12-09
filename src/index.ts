@@ -34,37 +34,45 @@ function startMainScene() {
   const friend = new Friend()
   const waiter = new Waiter()
 
+  startConversation()
+
   PubSub.subscribe('menu.dish.select', (t, dish) => {
     friend.dialog.stopSay()
     waiter.dialog.stopSay()
-    player.wantDish(dish)
-    .then(delay(100))
-    .then(() => friend.check(dish))
-    .then((accept) => {
-      if (accept) {
-        order.addOrder(dish)
-      } else {
-        waiter.recommend()
-      }
+    startConversation().then(() => {
+      const accept = Math.random() > 0.3
+      order.addOrder(dish)
     })
   })
-  PubSub.subscribe('menu.dish.help', (t, dish) => {
-    player.askDish(dish)
-    .then(delay(1000))
-    .then(() => waiter.explainDish(dish))
-  })
+  // PubSub.subscribe('menu.dish.help', (t, dish) => {
+  //   player.askDish(dish)
+  //   .then(delay(1000))
+  //   .then(() => waiter.explainDish(dish))
+  // })
 
-  setTimeout(function waiterNag() {
-    if (
-      !friend.dialog.isSaying &&
-      !player.dialog.isSaying &&
-      !waiter.dialog.isSaying
-    ) {
-      waiter.nag()
-    }
-    setTimeout(waiterNag, 10000 + Math.random() * 5000)
-  }, 2000)
+  // setTimeout(function waiterNag() {
+  //   if (
+  //     !friend.dialog.isSaying &&
+  //     !player.dialog.isSaying &&
+  //     !waiter.dialog.isSaying
+  //   ) {
+  //     waiter.nag()
+  //   }
+  //   setTimeout(waiterNag, 10000 + Math.random() * 5000)
+  // }, 2000)
+
+  function startConversation() {
+    menu.stop()
+    const speakers = [player, friend, waiter]
+    return speakers[0].dialog.say('hello')
+    .then(() => speakers[1].dialog.say('ok'))
+    .then(() => speakers[2].dialog.say('wow', false))
+    .then(() => {
+      menu.resume()
+    })
+  }
 }
+
 
 if (document.readyState === 'complete') {
   setTimeout(startGame, 500)

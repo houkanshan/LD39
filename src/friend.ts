@@ -15,11 +15,11 @@ export default class Friend {
     this.sayingType = SayingType.Silence
   }
 
-  check(dish) {
-    const isOk = Math.random() > 0.5
-    this.sayingType = SayingType.Judging
-    PubSub.publish('friend.judge', { dish, isOk })
-    return this.dialog.say(isOk ? 'Fine.' : 'No.')
-    .then(() => isOk)
-  }
+  // check(dish) {
+  //   const isOk = Math.random() > 0.5
+  //   this.sayingType = SayingType.Judging
+  //   PubSub.publish('friend.judge', { dish, isOk })
+  //   return this.dialog.say(isOk ? 'Fine.' : 'No.')
+  //   .then(() => isOk)
+  // }
 }

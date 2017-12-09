@@ -1,12 +1,12 @@
 declare function require(name:string)
 
-const d0 = require('./data/Salads.csv')
-const d1 = require('./data/BurgersSandwiches.csv')
-const d2 = require('./data/PastaNoodles.csv')
-const d3 = require('./data/MainDishesEntees.csv')
-const d4 = require('./data/Pizzas.csv')
-const d5 = require('./data/SoupStew.csv')
-const d6 = require('./data/Desserts.csv')
+const d0 = require('./data/menu/Salads.csv')
+const d1 = require('./data/menu/BurgersSandwiches.csv')
+const d2 = require('./data/menu/PastaNoodles.csv')
+const d3 = require('./data/menu/MainDishesEntees.csv')
+const d4 = require('./data/menu/Pizzas.csv')
+const d5 = require('./data/menu/SoupStew.csv')
+const d6 = require('./data/menu/Desserts.csv')
 
 const csvData = [d0, d1, d2, d3, d4, d5, d6]
 

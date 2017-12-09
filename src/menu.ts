@@ -9,6 +9,7 @@ export default class Menu {
   book: JQuery
   dishes: Array<Dish> = []
   level = 1
+  stopped = false
   constructor() {
     this.el = $("#menu")
     this.book = this.el.turn({
@@ -16,6 +17,7 @@ export default class Menu {
       height: 529,
       when: {
         start: (e, pageObject) => {
+          if (this.stopped) { e.preventDefault() }
           if (pageObject.next + 4 > this.book.turn('pages')) {
             this.addPagesGroup()
           }
@@ -83,13 +85,24 @@ export default class Menu {
     this.book.turn('addPage', page, pageNum)
   }
 
+  stop() {
+    this.stopped = true
+    this.book.turn('disable', true)
+  }
+  resume() {
+    this.stopped = false
+    this.book.turn('disable', false)
+  }
+
   clickDish(e) {
+    if (this.stopped) { return }
     const target = $(e.target).closest('.dish-item')
     const dishId = target.data('id')
     const dish = this.dishes[dishId]
     PubSub.publish('menu.dish.select', dish)
   }
   clickDishHelp(e) {
+    if (this.stopped) { return }
     const target = $(e.target).closest('.dish-item')
     const dishId = target.data('id')
     const dish = this.dishes[dishId]

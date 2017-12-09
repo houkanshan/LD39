@@ -14,16 +14,16 @@ export default class Waiter {
     this.sayingType = SayingType.Silence
   }
 
-  askDish(dish: Dish) {
-    this.sayingType = SayingType.Asking
-    PubSub.publish('player.ask', dish)
-    return this.dialog.say(`What is ${dish.name}?`)
-    .then(() => this.sayingType = SayingType.Silence)
-  }
+  // askDish(dish: Dish) {
+  //   this.sayingType = SayingType.Asking
+  //   PubSub.publish('player.ask', dish)
+  //   return this.dialog.say(`What is ${dish.name}?`)
+  //   .then(() => this.sayingType = SayingType.Silence)
+  // }
 
-  wantDish(dish: Dish) {
-    this.sayingType = SayingType.Consulting
-    PubSub.publish('player.consult', dish)
-    return this.dialog.say(`How about ${dish.name}?`)
-  }
+  // wantDish(dish: Dish) {
+  //   this.sayingType = SayingType.Consulting
+  //   PubSub.publish('player.consult', dish)
+  //   return this.dialog.say(`How about ${dish.name}?`)
+  // }
 }
