@@ -12,8 +12,8 @@ export default class Menu {
   constructor() {
     this.el = $("#menu")
     this.book = this.el.turn({
-      width: 640,
-      height: 480,
+      width: 688,
+      height: 529,
       when: {
         start: (e, pageObject) => {
           if (pageObject.next + 4 > this.book.turn('pages')) {
@@ -41,7 +41,7 @@ export default class Menu {
     // insert 2 more main dishes
     indexes.splice(indexes.indexOf(MAIN_DISH_INDEX), 0, MAIN_DISH_INDEX, MAIN_DISH_INDEX)
     console.log(indexes)
-    const courses = selectDishesInBatches(indexes, this.level, 8, 3)
+    const courses = selectDishesInBatches(indexes, this.level, 7, 2)
     courses[indexes.indexOf(MAIN_DISH_INDEX) + 1].noTitle = true
     courses[indexes.indexOf(MAIN_DISH_INDEX) + 2].noTitle = true
 
