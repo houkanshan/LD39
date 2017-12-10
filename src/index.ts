@@ -8,6 +8,7 @@ import Friend from './friend'
 import Player from './player'
 import Waiter from './waiter'
 import { delay } from './utils'
+import './dialogText'
 
 const body = $(document.body)
 

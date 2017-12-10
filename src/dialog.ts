@@ -21,7 +21,9 @@ export default class Dialog {
     .then(() => this.isSaying = false)
 
     if (needClick) {
-      typerPromise.then(() => {
+      typerPromise
+      .then(delay(500))
+      .then(() => {
         this.isWaitingClick = true
         this.el.addClass('is-waiting')
         doc.one('click', () => {
