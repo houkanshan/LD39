@@ -8,10 +8,11 @@ export default class Menu {
   el: JQuery
   book: JQuery
   dishes: Array<Dish> = []
-  level = 1
+  level:number
   stopped = false
-  constructor() {
+  constructor(options) {
     this.el = $("#menu")
+    this.level = options.level
     this.book = this.el.turn({
       width: 688,
       height: 529,
@@ -29,6 +30,7 @@ export default class Menu {
     this.el.on('click', '.dish-item', this.clickDish.bind(this))
     // this.el.on('click', '.dish-help', this.clickDishHelp.bind(this))
   }
+  setLevel(level:number) { this.level = level }
   addPagesGroup() {
     this.generateDishes().forEach(course => {
       this.addPage(course)
@@ -43,7 +45,7 @@ export default class Menu {
     // insert 2 more main dishes
     indexes.splice(indexes.indexOf(MAIN_DISH_INDEX), 0, MAIN_DISH_INDEX, MAIN_DISH_INDEX)
     console.log(indexes)
-    const courses = selectDishesInBatches(indexes, this.level, 7, 2)
+    const courses = selectDishesInBatches(indexes, Math.max(this.level, 2), 7, 2)
     courses[indexes.indexOf(MAIN_DISH_INDEX) + 1].noTitle = true
     courses[indexes.indexOf(MAIN_DISH_INDEX) + 2].noTitle = true
 
