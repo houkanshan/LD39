@@ -14,3 +14,9 @@ export enum SayingType {
 
   Misc,
 }
+
+export enum ConversationType {
+  DISH,
+  START,
+  END,
+}

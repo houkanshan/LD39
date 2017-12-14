@@ -198,7 +198,6 @@ function selectDishes(course, level, count) {
     dishes,
   }
 }
-console.log(allDishes)
 export function selectDishesInBatches(indexes, level, countPerIndex, countLoss = 0) {
   return indexes.map((index) => {
     return selectDishes(
@@ -207,5 +206,3 @@ export function selectDishesInBatches(indexes, level, countPerIndex, countLoss =
     )
   })
 }
-
-console.log(selectDishesInBatches([0, 1, 2], 1, 7))

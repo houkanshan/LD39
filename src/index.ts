@@ -8,14 +8,10 @@ import Friend from './friend'
 import Player from './player'
 import Waiter from './waiter'
 import { delay } from './utils'
-import './dialogText'
+import chooseConversation from './dialogText'
+import { ConversationType } from './enums'
 
 const body = $(document.body)
-enum ConversationType {
-  DISH,
-  START,
-  END,
-}
 
 function startGame() {
   if (body.hasClass('on')) { return }
@@ -32,6 +28,7 @@ function startGame() {
 class Game {
   beginTime: Date
   level: number
+  nextLevel: number
   passingRate: number
   passedCount: number
 
@@ -48,6 +45,7 @@ class Game {
 
     this.beginTime = new Date()
     this.level = 1
+    this.nextLevel = 1
     this.passingRate = 0
     this.passedCount = 0
 
@@ -58,12 +56,20 @@ class Game {
     this.waiter = new Waiter()
     this.speakers = [this.player, this.friend, this.waiter]
 
+    debugger
     this.startConversation(ConversationType.START)
 
     PubSub.subscribe('menu.dish.select', (t, dish) => {
-      this.startConversation(ConversationType.DISH, dish).then(() => {
-        if (this.judge(dish)) {
+      const passed = this.judge(dish)
+      this.startConversation(ConversationType.DISH, dish, passed).then(() => {
+        if (passed) {
           this.order.addOrder(dish)
+        }
+      }).then(() => {
+        if (this.nextLevel === 5) {
+          this.end()
+        } else if (this.level !== this.nextLevel) {
+          this.setLevel(this.nextLevel)
         }
       })
     })
@@ -80,8 +86,10 @@ class Game {
   }
   setLevel(level) {
     this.level = level
+    this.nextLevel = level
     this.menu.setLevel(level)
     this.passingRate = 0
+    console.log('level upgraded: ', level)
     // PubSub.publish('level.updated', level)
   }
   passingRateIncrementMap = [
@@ -98,24 +106,25 @@ class Game {
     if (passed) {
       this.passedCount += 1
       if (this.passedCount >= 1 && this.level < 2) {
-        this.setLevel(2)
+        this.nextLevel = 2
       } else if (this.passedCount >= 2 && this.level < 3) {
-        this.setLevel(3)
+        this.nextLevel = 3
       } else if (this.passedCount >= 3 && this.level < 4) {
-        this.setLevel(4)
+        this.nextLevel = 4
       } else if (this.passedCount >= 6) {
-        this.end()
+        this.nextLevel = 5
       }
     } else {
       this.passingRate += this.passingRateIncrementMap[this.level]
     }
     return passed
   }
-  startConversation(type: ConversationType, dish?) {
+  startConversation(type: ConversationType, dish?, passed?: boolean) {
     this.menu.stop()
-    return this.speakers[0].dialog.say('hello')
-    .then(() => this.speakers[1].dialog.say('ok'))
-    .then(() => this.speakers[2].dialog.say('wow'))
+    const dialog = chooseConversation(type, dish, this.level, passed)
+    return dialog.reduce((prev, { speakerIndex, text }) => {
+      return prev.then(() => this.speakers[speakerIndex].dialog.say(text))
+    }, $.Deferred().resolve())
     .then(() => {
       this.menu.resume()
     })
