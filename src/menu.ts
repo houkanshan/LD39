@@ -74,11 +74,13 @@ export default class Menu {
           <div class="dish-item" data-id="{{=it.id}}">
             <span class="dish-title">
               <span class="text">{{=it.name}}</span>
-              <span class="dish-pungency">
-                {{ for(var i = 0; i < it.pungency; i ++) { }}
-                <i/>
-                {{ } }}
-              </span>
+              {{ if(it.pungency) { }}
+                <span class="dish-pungency">
+                  {{ for(var i = 0; i < it.pungency; i ++) { }}
+                    <i/>
+                  {{ } }}
+                </span>
+              {{ } }}
             </span>
             <span class="dish-price">\${{=it.price}}</span>
           </div>
