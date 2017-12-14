@@ -72,6 +72,31 @@
 
 /***/ }),
 /* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return SayingType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConversationType; });
+var SayingType;
+(function (SayingType) {
+    SayingType[SayingType["Silence"] = 0] = "Silence";
+    SayingType[SayingType["Explaining"] = 1] = "Explaining";
+    SayingType[SayingType["Recommending"] = 2] = "Recommending";
+    SayingType[SayingType["Judging"] = 3] = "Judging";
+    SayingType[SayingType["Asking"] = 4] = "Asking";
+    SayingType[SayingType["Consulting"] = 5] = "Consulting";
+    SayingType[SayingType["Misc"] = 6] = "Misc";
+})(SayingType || (SayingType = {}));
+var ConversationType;
+(function (ConversationType) {
+    ConversationType[ConversationType["DISH"] = 0] = "DISH";
+    ConversationType[ConversationType["START"] = 1] = "START";
+    ConversationType[ConversationType["END"] = 2] = "END";
+})(ConversationType || (ConversationType = {}));
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -336,16 +361,16 @@ https://github.com/mroderick/PubSubJS
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = append;
 /* harmony export (immutable) */ __webpack_exports__["b"] = change;
-/* harmony export (immutable) */ __webpack_exports__["c"] = delay;
-/* unused harmony export getRandom */
+/* unused harmony export delay */
+/* harmony export (immutable) */ __webpack_exports__["d"] = getRandom;
 /* harmony export (immutable) */ __webpack_exports__["g"] = shuffle;
-/* harmony export (immutable) */ __webpack_exports__["d"] = getMonthWord;
+/* harmony export (immutable) */ __webpack_exports__["c"] = getMonthWord;
 /* unused harmony export leftPad2 */
 /* harmony export (immutable) */ __webpack_exports__["e"] = getTime;
 /* harmony export (immutable) */ __webpack_exports__["f"] = randomDigital;
@@ -411,36 +436,16 @@ function randomDigital(bit) {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SayingType; });
-var SayingType;
-(function (SayingType) {
-    SayingType[SayingType["Silence"] = 0] = "Silence";
-    SayingType[SayingType["Explaining"] = 1] = "Explaining";
-    SayingType[SayingType["Recommending"] = 2] = "Recommending";
-    SayingType[SayingType["Judging"] = 3] = "Judging";
-    SayingType[SayingType["Asking"] = 4] = "Asking";
-    SayingType[SayingType["Consulting"] = 5] = "Consulting";
-    SayingType[SayingType["Misc"] = 6] = "Misc";
-})(SayingType || (SayingType = {}));
-
-
-/***/ }),
 /* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__typer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__typer__ = __webpack_require__(7);
 
 
-
-var doc = __WEBPACK_IMPORTED_MODULE_1_jquery__(document);
+var doc = __WEBPACK_IMPORTED_MODULE_0_jquery__(document);
 var Dialog = (function () {
     function Dialog(el) {
         this.isSaying = false;
@@ -450,18 +455,17 @@ var Dialog = (function () {
     Dialog.prototype.say = function (text, needClick) {
         var _this = this;
         if (needClick === void 0) { needClick = true; }
-        var dfd = __WEBPACK_IMPORTED_MODULE_1_jquery__["Deferred"]();
-        this.el.addClass('say');
+        var dfd = __WEBPACK_IMPORTED_MODULE_0_jquery__["Deferred"]();
+        this.el.addClass('is-saying');
         this.isSaying = true;
-        var typerPromise = Object(__WEBPACK_IMPORTED_MODULE_2__typer__["a" /* default */])(this.el, text)
-            .then(Object(__WEBPACK_IMPORTED_MODULE_0__utils__["c" /* delay */])(500))
+        var typerPromise = Object(__WEBPACK_IMPORTED_MODULE_1__typer__["a" /* default */])(this.el, text)
             .then(function () { return _this.isSaying = false; });
         if (needClick) {
             typerPromise
-                .then(Object(__WEBPACK_IMPORTED_MODULE_0__utils__["c" /* delay */])(500))
                 .then(function () {
                 _this.isWaitingClick = true;
                 _this.el.addClass('is-waiting');
+                _this.el.removeClass('is-saying');
                 doc.one('click', function () {
                     _this.isWaitingClick = false;
                     _this.el.removeClass('is-waiting');
@@ -470,14 +474,10 @@ var Dialog = (function () {
             });
         }
         else {
+            this.el.removeClass('is-saying');
             dfd.resolve();
         }
         return dfd.promise();
-    };
-    Dialog.prototype.stopSay = function () {
-        this.el.removeClass('say');
-        Object(__WEBPACK_IMPORTED_MODULE_2__typer__["a" /* default */])(this.el, '…');
-        this.isSaying = false;
     };
     return Dialog;
 }());
@@ -726,7 +726,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__libs_turn__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__libs_turn___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__libs_turn__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_pubsub_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_pubsub_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_pubsub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_pubsub_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__menu__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__order__ = __webpack_require__(22);
@@ -734,7 +734,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__player__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__waiter__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__dialogText__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__dialogText___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__dialogText__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__enums__ = __webpack_require__(1);
+
 
 
 
@@ -746,12 +747,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 var body = __WEBPACK_IMPORTED_MODULE_1_jquery__(document.body);
-var ConversationType;
-(function (ConversationType) {
-    ConversationType[ConversationType["DISH"] = 0] = "DISH";
-    ConversationType[ConversationType["START"] = 1] = "START";
-    ConversationType[ConversationType["END"] = 2] = "END";
-})(ConversationType || (ConversationType = {}));
 function startGame() {
     if (body.hasClass('on')) {
         return;
@@ -779,6 +774,7 @@ var Game = (function () {
         __WEBPACK_IMPORTED_MODULE_3_pubsub_js___default.a.subscribe('order', function (t, d) { return console.log(t, d); });
         this.beginTime = new Date();
         this.level = 1;
+        this.nextLevel = 1;
         this.passingRate = 0;
         this.passedCount = 0;
         this.menu = new __WEBPACK_IMPORTED_MODULE_4__menu__["a" /* default */]({ level: this.level });
@@ -787,13 +783,20 @@ var Game = (function () {
         this.friend = new __WEBPACK_IMPORTED_MODULE_6__friend__["a" /* default */]();
         this.waiter = new __WEBPACK_IMPORTED_MODULE_8__waiter__["a" /* default */]();
         this.speakers = [this.player, this.friend, this.waiter];
-        this.startConversation(ConversationType.START);
+        debugger;
+        this.startConversation(__WEBPACK_IMPORTED_MODULE_10__enums__["a" /* ConversationType */].START);
         __WEBPACK_IMPORTED_MODULE_3_pubsub_js___default.a.subscribe('menu.dish.select', function (t, dish) {
-            _this.friend.dialog.stopSay();
-            _this.waiter.dialog.stopSay();
-            _this.startConversation(ConversationType.DISH, dish).then(function () {
-                if (_this.judge(dish)) {
+            var passed = _this.judge(dish);
+            _this.startConversation(__WEBPACK_IMPORTED_MODULE_10__enums__["a" /* ConversationType */].DISH, dish, passed).then(function () {
+                if (passed) {
                     _this.order.addOrder(dish);
+                }
+            }).then(function () {
+                if (_this.nextLevel === 5) {
+                    _this.end();
+                }
+                else if (_this.level !== _this.nextLevel) {
+                    _this.setLevel(_this.nextLevel);
                 }
             });
         });
@@ -809,8 +812,10 @@ var Game = (function () {
     };
     Game.prototype.setLevel = function (level) {
         this.level = level;
+        this.nextLevel = level;
         this.menu.setLevel(level);
         this.passingRate = 0;
+        console.log('level upgraded: ', level);
     };
     Game.prototype.judge = function (dish) {
         if (dish.pungency > 2) {
@@ -820,16 +825,16 @@ var Game = (function () {
         if (passed) {
             this.passedCount += 1;
             if (this.passedCount >= 1 && this.level < 2) {
-                this.setLevel(2);
+                this.nextLevel = 2;
             }
             else if (this.passedCount >= 2 && this.level < 3) {
-                this.setLevel(3);
+                this.nextLevel = 3;
             }
             else if (this.passedCount >= 3 && this.level < 4) {
-                this.setLevel(4);
+                this.nextLevel = 4;
             }
             else if (this.passedCount >= 6) {
-                this.end();
+                this.nextLevel = 5;
             }
         }
         else {
@@ -837,12 +842,14 @@ var Game = (function () {
         }
         return passed;
     };
-    Game.prototype.startConversation = function (type, dish) {
+    Game.prototype.startConversation = function (type, dish, passed) {
         var _this = this;
         this.menu.stop();
-        return this.speakers[0].dialog.say('hello')
-            .then(function () { return _this.speakers[1].dialog.say('ok'); })
-            .then(function () { return _this.speakers[2].dialog.say('wow', false); })
+        var dialog = Object(__WEBPACK_IMPORTED_MODULE_9__dialogText__["a" /* default */])(type, dish, this.level, passed);
+        return dialog.reduce(function (prev, _a) {
+            var speakerIndex = _a.speakerIndex, text = _a.text;
+            return prev.then(function () { return _this.speakers[speakerIndex].dialog.say(text); });
+        }, __WEBPACK_IMPORTED_MODULE_1_jquery__["Deferred"]().resolve())
             .then(function () {
             _this.menu.resume();
         });
@@ -14495,19 +14502,20 @@ $.findPos = findPos;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pubsub_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pubsub_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pubsub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_pubsub_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_dot__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_dot___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_dot__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__menuText__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils__ = __webpack_require__(3);
 
 
 
 
 
+var isChrome = navigator.userAgent.indexOf('Chrome') !== -1;
 var Menu = (function () {
     function Menu(options) {
         var _this = this;
@@ -14518,6 +14526,7 @@ var Menu = (function () {
         this.level = options.level;
         this.book = this.el.turn({
             width: 688,
+            acceleration: !isChrome,
             height: 529,
             when: {
                 start: function (e, pageObject) {
@@ -14569,7 +14578,7 @@ var Menu = (function () {
         var dishesContent = __WEBPACK_IMPORTED_MODULE_1_jquery__('<div>').addClass('dishes-content');
         page.append(dishesContent);
         dishes.forEach(function (dish) {
-            dishesContent.append(Object(__WEBPACK_IMPORTED_MODULE_2_dot__["template"])("\n          <div class=\"dish-item\" data-id=\"{{=it.id}}\">\n            <span class=\"dish-title\">\n              <span class=\"text\">{{=it.name}}</span>\n              <span class=\"dish-pungency\">\n                {{ for(var i = 0; i < it.pungency; i ++) { }}\n                <i/>\n                {{ } }}\n              </span>\n            </span>\n            <span class=\"dish-price\">${{=it.price}}</span>\n          </div>\n        ")(dish));
+            dishesContent.append(Object(__WEBPACK_IMPORTED_MODULE_2_dot__["template"])("\n          <div class=\"dish-item\" data-id=\"{{=it.id}}\">\n            <span class=\"dish-title\">\n              <span class=\"text\">{{=it.name}}</span>\n              {{ if(it.pungency) { }}\n                <span class=\"dish-pungency\">\n                  {{ for(var i = 0; i < it.pungency; i ++) { }}\n                    <i/>\n                  {{ } }}\n                </span>\n              {{ } }}\n            </span>\n            <span class=\"dish-price\">${{=it.price}}</span>\n          </div>\n        ")(dish));
         });
         var pageNum = this.book.turn('pages') + 1;
         page.append(__WEBPACK_IMPORTED_MODULE_1_jquery__('<span>', { 'class': 'page-num' }).text("- " + pageNum + " -"));
@@ -14791,14 +14800,12 @@ function selectDishes(course, level, count) {
         dishes: dishes
     };
 }
-console.log(allDishes);
 function selectDishesInBatches(indexes, level, countPerIndex, countLoss) {
     if (countLoss === void 0) { countLoss = 0; }
     return indexes.map(function (index) {
         return selectDishes(allDishes[index], level, countPerIndex - Math.round(countLoss * Math.random()));
     });
 }
-console.log(selectDishesInBatches([0, 1, 2], 1, 7));
 
 
 /***/ }),
@@ -14848,13 +14855,13 @@ module.exports = [["Deserts",8.5,"","","","","","","","","","",""],["*",3,"Sugar
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pubsub_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pubsub_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pubsub_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_pubsub_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_dot__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_dot___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_dot__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__typer__ = __webpack_require__(7);
 var __assign = (this && this.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -14875,7 +14882,7 @@ var Order = (function () {
         this.el = __WEBPACK_IMPORTED_MODULE_1_jquery__('#order');
         this.elList = this.el.find('.list');
         var beginTime = options.beginTime;
-        this.el.find('.time').text(Object(__WEBPACK_IMPORTED_MODULE_3__utils__["d" /* getMonthWord */])(beginTime.getMonth()) + " " + beginTime.getDate() + ", " + beginTime.getFullYear() +
+        this.el.find('.time').text(Object(__WEBPACK_IMPORTED_MODULE_3__utils__["c" /* getMonthWord */])(beginTime.getMonth()) + " " + beginTime.getDate() + ", " + beginTime.getFullYear() +
             (" at " + Object(__WEBPACK_IMPORTED_MODULE_3__utils__["e" /* getTime */])(beginTime)));
         this.el.find('.order-number').text("Order: #" + Object(__WEBPACK_IMPORTED_MODULE_3__utils__["f" /* randomDigital */])(5) + "-" + Object(__WEBPACK_IMPORTED_MODULE_3__utils__["f" /* randomDigital */])(3));
         this.el.find('.table-number').text("Table: " + Object(__WEBPACK_IMPORTED_MODULE_3__utils__["f" /* randomDigital */])(2) + " SEC" + Object(__WEBPACK_IMPORTED_MODULE_3__utils__["f" /* randomDigital */])(1));
@@ -14914,7 +14921,7 @@ var Order = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__enums__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__enums__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dialog__ = __webpack_require__(4);
 
 
@@ -14923,7 +14930,7 @@ var Friend = (function () {
     function Friend() {
         this.el = __WEBPACK_IMPORTED_MODULE_0_jquery__('#friend');
         this.dialog = new __WEBPACK_IMPORTED_MODULE_2__dialog__["a" /* default */](this.el.find('.dialog'));
-        this.sayingType = __WEBPACK_IMPORTED_MODULE_1__enums__["a" /* SayingType */].Silence;
+        this.sayingType = __WEBPACK_IMPORTED_MODULE_1__enums__["b" /* SayingType */].Silence;
     }
     return Friend;
 }());
@@ -14937,7 +14944,7 @@ var Friend = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__enums__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__enums__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dialog__ = __webpack_require__(4);
 
 
@@ -14946,7 +14953,7 @@ var Waiter = (function () {
     function Waiter() {
         this.el = __WEBPACK_IMPORTED_MODULE_0_jquery__('#player');
         this.dialog = new __WEBPACK_IMPORTED_MODULE_2__dialog__["a" /* default */](this.el.find('.dialog'));
-        this.sayingType = __WEBPACK_IMPORTED_MODULE_1__enums__["a" /* SayingType */].Silence;
+        this.sayingType = __WEBPACK_IMPORTED_MODULE_1__enums__["b" /* SayingType */].Silence;
     }
     return Waiter;
 }());
@@ -14960,7 +14967,7 @@ var Waiter = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__enums__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__enums__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dialog__ = __webpack_require__(4);
 
 
@@ -14969,7 +14976,7 @@ var Waiter = (function () {
     function Waiter() {
         this.el = __WEBPACK_IMPORTED_MODULE_0_jquery__('#waiter');
         this.dialog = new __WEBPACK_IMPORTED_MODULE_2__dialog__["a" /* default */](this.el.find('.dialog'));
-        this.sayingType = __WEBPACK_IMPORTED_MODULE_1__enums__["a" /* SayingType */].Silence;
+        this.sayingType = __WEBPACK_IMPORTED_MODULE_1__enums__["b" /* SayingType */].Silence;
     }
     return Waiter;
 }());
@@ -14978,15 +14985,29 @@ var Waiter = (function () {
 
 /***/ }),
 /* 26 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var d0 = __webpack_require__(27);
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = chooseConversation;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__enums__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(3);
+
+
+var begin = __webpack_require__(27);
+var end = __webpack_require__(28);
+var succeeded123 = __webpack_require__(29);
+var failed123 = __webpack_require__(30);
+var succeeded4 = __webpack_require__(31);
+var failed4 = __webpack_require__(32);
+var succeededSpicy = __webpack_require__(33);
+var failedSpicy = __webpack_require__(34);
+var failedTooSpicy = __webpack_require__(35);
 var speakerMap = {
     A: 0, a: 0,
     B: 1, b: 1,
     C: 2, c: 2
 };
-function parseDialogTree(table) {
+function parseConversations(table) {
     var conversationGroup = [];
     var conversation = [];
     for (var i = 0, ilen = table.length; i < ilen; i++) {
@@ -15004,11 +15025,108 @@ function parseDialogTree(table) {
     conversationGroup.push(conversation);
     return conversationGroup;
 }
-console.log(parseDialogTree(d0));
+var dialogsGroup = {
+    begin: { used: [], conversations: parseConversations(begin) },
+    end: { used: [], conversations: parseConversations(end) },
+    succeeded123: { used: [], conversations: parseConversations(succeeded123) },
+    failed123: { used: [], conversations: parseConversations(failed123) },
+    succeeded4: { used: [], conversations: parseConversations(succeeded4) },
+    failed4: { used: [], conversations: parseConversations(failed4) },
+    succeededSpicy: { used: [], conversations: parseConversations(succeededSpicy) },
+    failedSpicy: { used: [], conversations: parseConversations(failedSpicy) },
+    failedTooSpicy: { used: [], conversations: parseConversations(failedTooSpicy) }
+};
+function choose(dialogs) {
+    var conversation = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["d" /* getRandom */])(dialogs.conversations, dialogs.used);
+    dialogs.used.unshift(conversation);
+    dialogs.used = dialogs.used.slice(0, 10);
+    return conversation;
+}
+function chooseConversation(type, dish, level, passed) {
+    if (type === __WEBPACK_IMPORTED_MODULE_0__enums__["a" /* ConversationType */].START) {
+        return choose(dialogsGroup.begin);
+    }
+    if (type === __WEBPACK_IMPORTED_MODULE_0__enums__["a" /* ConversationType */].END) {
+        return choose(dialogsGroup.end);
+    }
+    if (dish.pungency > 2) {
+        return choose(dialogsGroup.failedTooSpicy);
+    }
+    if (dish.pungency > 0) {
+        if (passed) {
+            return choose(dialogsGroup.succeededSpicy);
+        }
+        else {
+            return choose(dialogsGroup.failedSpicy);
+        }
+    }
+    if (level < 3) {
+        if (passed) {
+            return choose(dialogsGroup.succeeded123);
+        }
+        else {
+            return choose(dialogsGroup.failed123);
+        }
+    }
+    if (passed) {
+        return choose(dialogsGroup.succeeded4);
+    }
+    else {
+        return choose(dialogsGroup.failed4);
+    }
+}
 
 
 /***/ }),
 /* 27 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
+
+module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]
+
+/***/ }),
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = [["C","Hi."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["B","Hey."],["A","OK."],["",""],["C","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."],["B","fine."],["A","fine."]]

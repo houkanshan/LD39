@@ -148,6 +148,9 @@ body.hide-loading-layer:before {
   position: relative;
   cursor: pointer;
 }
+#menu .dish-item:hover {
+  background: #f9ec9b;
+}
 #menu .dish-price,
 #menu .dish-title {
   position: absolute;
@@ -193,27 +196,76 @@ body.hide-loading-layer:before {
   width: 200px;
   position: relative;
   z-index: 100;
+  -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+  transition: opacity 0.3s, -webkit-transform 0.3s;
+  transition: transform 0.3s, opacity 0.3s;
+  transition: transform 0.3s, opacity 0.3s, -webkit-transform 0.3s;
+  will-change: opacity, transform;
+  opacity: 0;
 }
-.dialog.is-waiting {
+.dialog.is-waiting,
+.dialog.is-saying {
+  opacity: 1;
+}
+.dialog:after {
+  content: '';
+  width: 10px;
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  height: 16px;
   background-image: url("../img/click.gif");
   background-size: 10px 16px;
-  background-position: right 12px bottom 6px;
   background-repeat: no-repeat;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  will-change: opacity;
+}
+.dialog.is-waiting:after {
+  opacity: 1;
 }
 #player {
   position: absolute;
   bottom: 20px;
   left: 300px;
 }
+#player .dialog {
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+}
+#player .dialog.is-saying,
+#player .dialog.is-waiting {
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+}
 #waiter {
   position: absolute;
   left: 0;
   top: 400px;
 }
+#waiter .dialog {
+  -webkit-transform: translateX(-10px);
+          transform: translateX(-10px);
+}
+#waiter .dialog.is-saying,
+#waiter .dialog.is-waiting {
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+}
 #friend {
   position: absolute;
   top: 0;
   left: 300px;
+}
+#friend .dialog {
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+}
+#friend .dialog.is-saying,
+#friend .dialog.is-waiting {
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
 }
 #order {
   position: absolute;
