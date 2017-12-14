@@ -4,6 +4,8 @@ import { template } from 'dot'
 import {selectDishesInBatches, MAIN_DISH_INDEX} from './menuText'
 import {shuffle} from './utils'
 
+const isChrome = navigator.userAgent.indexOf('Chrome') !== -1
+
 export default class Menu {
   el: JQuery
   book: JQuery
@@ -15,6 +17,7 @@ export default class Menu {
     this.level = options.level
     this.book = this.el.turn({
       width: 688,
+		  acceleration: !isChrome,
       height: 529,
       when: {
         start: (e, pageObject) => {
