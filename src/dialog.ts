@@ -14,18 +14,17 @@ export default class Dialog {
   }
   say(text: string, needClick = true) {
     const dfd = $.Deferred()
-    this.el.addClass('say')
+    this.el.addClass('is-saying')
     this.isSaying = true
     const typerPromise = typer(this.el, text)
-    .then(delay(500))
     .then(() => this.isSaying = false)
 
     if (needClick) {
       typerPromise
-      .then(delay(500))
       .then(() => {
         this.isWaitingClick = true
         this.el.addClass('is-waiting')
+        this.el.removeClass('is-saying')
         doc.one('click', () => {
           this.isWaitingClick = false
           this.el.removeClass('is-waiting')
@@ -33,13 +32,9 @@ export default class Dialog {
         })
       })
     } else {
+      this.el.removeClass('is-saying')
       dfd.resolve()
     }
     return dfd.promise()
-  }
-  stopSay() {
-    this.el.removeClass('say')
-    typer(this.el, '…')
-    this.isSaying = false
   }
 }

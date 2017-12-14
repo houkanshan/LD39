@@ -8,8 +8,24 @@
   width: 200px
   position: relative
   z-index: $zIndexDialog
+  transition: transform 0.3s, opacity 0.3s
+  will-change: opacity, transform
+  opacity: 0
   &.is-waiting
+  &.is-saying
+    opacity: 1
+  &:after
+    content: ''
+    width: 10px
+    position: absolute
+    right: 12px
+    bottom: 6px
+    height: 16px
     background-image: url(../img/click.gif)
     background-size: 10px 16px
-    background-position: right 12px bottom 6px
     background-repeat: no-repeat
+    opacity: 0
+    transition: opacity 0.3s
+    will-change: opacity
+  &.is-waiting:after
+    opacity: 1

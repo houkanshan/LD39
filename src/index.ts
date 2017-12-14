@@ -61,8 +61,6 @@ class Game {
     this.startConversation(ConversationType.START)
 
     PubSub.subscribe('menu.dish.select', (t, dish) => {
-      this.friend.dialog.stopSay()
-      this.waiter.dialog.stopSay()
       this.startConversation(ConversationType.DISH, dish).then(() => {
         if (this.judge(dish)) {
           this.order.addOrder(dish)
@@ -117,7 +115,7 @@ class Game {
     this.menu.stop()
     return this.speakers[0].dialog.say('hello')
     .then(() => this.speakers[1].dialog.say('ok'))
-    .then(() => this.speakers[2].dialog.say('wow', false))
+    .then(() => this.speakers[2].dialog.say('wow'))
     .then(() => {
       this.menu.resume()
     })
